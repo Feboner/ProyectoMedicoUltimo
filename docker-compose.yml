@@ -1,0 +1,224 @@
+services:
+  mysql:
+    image: mysql:8.0.36
+    container_name: proyecto-medico-mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
+
+  ms-auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_DIR: ms-auth
+    environment:
+      SERVER_PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_medico_auth?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8081:8081"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ms-pacientes:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_DIR: ms-pacientes
+    environment:
+      SERVER_PORT: 8083
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_medico_pacientes?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8083:8083"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ms-productos:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_DIR: ms-productos
+    environment:
+      SERVER_PORT: 8082
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_medico_productos?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8082:8082"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ms-pedidos:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_DIR: ms-pedidos
+    environment:
+      SERVER_PORT: 8085
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_medico_pedidos?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8085:8085"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ms-recetas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_DIR: ms-recetas
+    environment:
+      SERVER_PORT: 8086
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_medico_recetas?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8086:8086"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ms-proveedores:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_DIR: ms-proveedores
+    environment:
+      SERVER_PORT: 8087
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_medico_proveedores?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8087:8087"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ms-pagos:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_DIR: ms-pagos
+    environment:
+      SERVER_PORT: 8088
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_medico_pagos?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8088:8088"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ms-envios:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_DIR: ms-envios
+    environment:
+      SERVER_PORT: 8089
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_medico_envios?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8089:8089"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ms-auditoria:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_DIR: ms-auditoria
+    environment:
+      SERVER_PORT: 8090
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_medico_auditoria?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8090:8090"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ms-inventario:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_DIR: ms-inventario
+    environment:
+      SERVER_PORT: 8084
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_medico_inventario?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8084:8084"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  ms-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_DIR: ms-gateway
+    environment:
+      SERVER_PORT: 8080
+      AUTH_URI: http://ms-auth:8081
+      PACIENTES_URI: http://ms-pacientes:8083
+      PRODUCTOS_URI: http://ms-productos:8082
+      PEDIDOS_URI: http://ms-pedidos:8085
+      PROVEEDORES_URI: http://ms-proveedores:8087
+      PAGOS_URI: http://ms-pagos:8088
+      ENVIOS_URI: http://ms-envios:8089
+      AUDITORIA_URI: http://ms-auditoria:8090
+      RECETAS_URI: http://ms-recetas:8086
+      INVENTARIO_URI: http://ms-inventario:8084
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ms-auth
+      - ms-pacientes
+      - ms-productos
+      - ms-pedidos
+      - ms-proveedores
+      - ms-pagos
+      - ms-envios
+      - ms-auditoria
+      - ms-recetas
+      - ms-inventario
+
+volumes:
+  mysql_data:

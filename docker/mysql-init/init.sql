@@ -1,0 +1,10 @@
+CREATE DATABASE IF NOT EXISTS db_medico_auth;
+CREATE DATABASE IF NOT EXISTS db_medico_pacientes;
+CREATE DATABASE IF NOT EXISTS db_medico_productos;
+CREATE DATABASE IF NOT EXISTS db_medico_inventario;
+CREATE DATABASE IF NOT EXISTS db_medico_pedidos;
+CREATE DATABASE IF NOT EXISTS db_medico_recetas;
+CREATE DATABASE IF NOT EXISTS db_medico_proveedores;
+CREATE DATABASE IF NOT EXISTS db_medico_pagos;
+CREATE DATABASE IF NOT EXISTS db_medico_envios;
+CREATE DATABASE IF NOT EXISTS db_medico_auditoria;
