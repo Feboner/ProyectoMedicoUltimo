@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,28 +30,27 @@ public class ProductoService {
 
     public Producto crear(ProductoDTO dto) {
         log.info("Crear producto: {}", dto.getNombre());
-
         Producto p = new Producto();
         p.setNombre(dto.getNombre());
         p.setPrecio(dto.getPrecio());
         p.setStock(dto.getStock());
-
         return repo.save(p);
     }
 
     public Producto actualizar(Long id, ProductoDTO dto) {
         log.info("Actualizar producto id: {}", id);
-
         Producto p = obtener(id);
         p.setNombre(dto.getNombre());
         p.setPrecio(dto.getPrecio());
         p.setStock(dto.getStock());
-
         return repo.save(p);
     }
 
     public void eliminar(Long id) {
         log.warn("Eliminar producto id: {}", id);
+        if (!repo.existsById(id)) {
+            throw new EntityNotFoundException("Producto no encontrado");
+        }
         repo.deleteById(id);
     }
 }
