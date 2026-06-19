@@ -2,7 +2,7 @@ package com.duoc.ms_pedidos.controller;
 
 import com.duoc.ms_pedidos.dto.ApiResponse;
 import com.duoc.ms_pedidos.dto.PedidoDTO;
-import com.duoc.ms_pedidos.dto.PedidoResponse;
+import com.duoc.ms_pedidos.model.Pedido;
 import com.duoc.ms_pedidos.service.PedidoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +21,9 @@ public class PedidoController {
     private final PedidoService service;
 
     @GetMapping
-        public ResponseEntity<ApiResponse<List<PedidoResponse>>> listar() {
+        public ResponseEntity<ApiResponse<List<Pedido>>> listar() {
         return ResponseEntity.ok(
-            ApiResponse.<List<PedidoResponse>>builder()
+            ApiResponse.<List<Pedido>>builder()
                         .success(true)
                         .message("Listado obtenido")
                         .data(service.listar())
@@ -32,9 +32,9 @@ public class PedidoController {
     }
 
     @GetMapping("/{id}")
-        public ResponseEntity<ApiResponse<PedidoResponse>> obtener(@PathVariable Long id) {
+        public ResponseEntity<ApiResponse<Pedido>> obtener(@PathVariable Long id) {
         return ResponseEntity.ok(
-            ApiResponse.<PedidoResponse>builder()
+            ApiResponse.<Pedido>builder()
                         .success(true)
                         .message("Registro obtenido")
                         .data(service.obtener(id))
@@ -43,9 +43,9 @@ public class PedidoController {
     }
 
     @PostMapping
-        public ResponseEntity<ApiResponse<PedidoResponse>> crear(@Valid @RequestBody PedidoDTO dto) {
+        public ResponseEntity<ApiResponse<Pedido>> crear(@Valid @RequestBody PedidoDTO dto) {
         return ResponseEntity.status(201).body(
-            ApiResponse.<PedidoResponse>builder()
+            ApiResponse.<Pedido>builder()
                         .success(true)
                         .message("Registro creado")
                         .data(service.crear(dto))
@@ -54,10 +54,10 @@ public class PedidoController {
     }
 
     @PutMapping("/{id}")
-        public ResponseEntity<ApiResponse<PedidoResponse>> actualizar(@PathVariable Long id,
+        public ResponseEntity<ApiResponse<Pedido>> actualizar(@PathVariable Long id,
                                       @Valid @RequestBody PedidoDTO dto) {
         return ResponseEntity.ok(
-            ApiResponse.<PedidoResponse>builder()
+            ApiResponse.<Pedido>builder()
                         .success(true)
                         .message("Registro actualizado")
                         .data(service.actualizar(id, dto))
