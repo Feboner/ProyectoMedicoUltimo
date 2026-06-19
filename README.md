@@ -20,7 +20,7 @@ Sistema de backend medico basado en arquitectura de microservicios desarrollado 
 - ms-auditoria
 - ms-gateway
 
-## Ejecucion local
+## Uso
 
 Abrir una terminal por cada microservicio y ejecutar:
 
@@ -41,16 +41,15 @@ Orden recomendado de inicio:
 10. ms-auditoria
 11. ms-gateway
 
-## Ejecucion con Docker
+## Docker
 
-En la raiz del proyecto, con Docker Desktop instalado, ejecutar una sola vez:
+En la raiz del proyecto:
 
 ```powershell
 docker compose up --build
 ```
 
-Esto levanta simultaneamente la base de datos, los 10 microservicios y el API Gateway.
-No es necesario iniciar cada microservicio por separado cuando se usa Docker.
+Esto levanta todos los ms y sus bd;
 
 Servicios expuestos:
 - Gateway: http://localhost:8080
@@ -80,8 +79,7 @@ Servicios expuestos:
 
 ## Swagger / OpenAPI
 
-Cada microservicio expone Swagger en su propia URL local, por ejemplo:
-
+Rutas Swagger;
 - http://localhost:8081/swagger-ui/index.html
 - http://localhost:8082/swagger-ui/index.html
 - http://localhost:8083/swagger-ui/index.html
@@ -103,3 +101,5 @@ Cada microservicio expone Swagger en su propia URL local, por ejemplo:
 - Relacion OneToMany entre Paciente y Direccion
 - Logs con Lombok en todas las capas
 - Base de datos independiente por cada microservicio
+- Configuracion con Docker
+- Tests unitarios con JUnit y Mockito
